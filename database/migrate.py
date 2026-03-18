@@ -42,8 +42,10 @@ def seed_teams(conn: sqlite3.Connection) -> None:
         (8, "Rajshahi Royals",       "RR2", "Rajshahi",     "Rajshahi Stadium",  "[2012,2013,2014,2015,2016,2017,2019]"),
     ]
     conn.executemany(
-        "INSERT OR IGNORE INTO teams VALUES (?,?,?,?,?,?,CURRENT_TIMESTAMP)",
-        teams
+        """INSERT OR IGNORE INTO teams
+           (team_id, name, abbreviation, home_city, seasons_active)
+           VALUES (?,?,?,?,?)""",
+        [(t[0], t[1], t[2], t[3], t[5]) for t in teams]
     )
     conn.commit()
     print(f"[migrate] Seeded {len(teams)} teams.")
