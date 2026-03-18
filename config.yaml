@@ -1,0 +1,63 @@
+app:
+  name: "BPL Stats API"
+  version: "1.0.0"
+  description: "Bangladesh Premier League numeric stats API — 2012 to 2026"
+  debug: false
+  host: "0.0.0.0"
+  port: 8000
+
+database:
+  path: "bpl.db"
+
+auth:
+  secret_key: "CHANGE_THIS_TO_A_STRONG_RANDOM_SECRET_IN_PRODUCTION"
+  algorithm: "HS256"
+  access_token_expire_minutes: 1440   # 24 hours
+
+rate_limiting:
+  free_tier_per_minute: 30
+  paid_tier_per_minute: 300
+  admin_tier_per_minute: 1000
+
+payment:
+  bcash:
+    merchant_id: "YOUR_BCASH_MERCHANT_ID"
+    api_url: "https://api.bcash.com.bd/pay"
+    callback_url: "https://your-domain.com/api/v1/payment/callback"
+  nagad:
+    merchant_id: "YOUR_NAGAD_MERCHANT_ID"
+    api_url: "https://api.nagad.com.bd/api/dfs/check-out/initialize"
+    callback_url: "https://your-domain.com/api/v1/payment/callback"
+
+subscriptions:
+  monthly_price_bdt: 199
+  yearly_price_bdt: 1499
+  trial_days: 7
+
+scraper:
+  base_url: "https://www.espncricinfo.com"
+  request_delay_seconds: 2
+  max_retries: 3
+  seasons:
+    - 2012
+    - 2013
+    - 2015
+    - 2016
+    - 2017
+    - 2019
+    - 2022
+    - 2023
+    - 2024
+    - 2025
+    - 2026
+
+ai:
+  model_path: "ai/models/bpl_predictor.joblib"
+  min_confidence_threshold: 0.55
+  retrain_every_n_matches: 50
+
+governance:
+  data_policy: "numeric_stats_only"
+  no_pii_in_predictions: true
+  audit_log_enabled: true
+  gdpr_compliant: true

@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BPL Cricket Stats API — Bangladesh Premier League 2012–2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@300;400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #060a0f;
+    --bg2:      #0c1219;
+    --bg3:      #111820;
+    --border:   #1e2d3d;
+    --border2:  #243547;
+    --cyan:     #00d4ff;
+    --cyan2:    #00a8cc;
+    --cyan3:    #007a99;
+    --gold:     #f5c842;
+    --gold2:    #c9a020;
+    --green:    #22c55e;
+    --red:      #ef4444;
+    --text:     #e8f0f8;
+    --text2:    #8ba4be;
+    --text3:    #4d6a82;
+    --font-hd:  'Teko', sans-serif;
+    --font-bd:  'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-bd);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── GRID LINES BG ── */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── GLOW ORBS ── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb-1 { width: 600px; height: 600px; background: rgba(0,212,255,0.06); top: -200px; left: -200px; }
+  .orb-2 { width: 500px; height: 500px; background: rgba(245,200,66,0.04); bottom: 100px; right: -150px; }
+  .orb-3 { width: 300px; height: 300px; background: rgba(0,212,255,0.04); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+
+  * { position: relative; z-index: 1; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo {
+    font-family: var(--font-hd);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text2);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--cyan);
+    color: #060a0f !important;
+    padding: 7px 18px;
+    border-radius: 4px;
+    font-weight: 500 !important;
+    font-size: 13px !important;
+  }
+  .nav-cta:hover { background: var(--cyan2) !important; color: #060a0f !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s ease infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+  .hero-title {
+    font-family: var(--font-hd);
+    font-size: clamp(56px, 10vw, 120px);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero-title .line1 { color: var(--text); display: block; }
+  .hero-title .line2 { color: var(--cyan); display: block; }
+  .hero-title .line3 { color: var(--text3); display: block; font-size: 0.55em; letter-spacing: 4px; margin-top: 8px; }
+
+  .hero-sub {
+    max-width: 560px;
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--text2);
+    line-height: 1.7;
+    margin: 28px auto 0;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .btn-primary {
+    background: var(--cyan);
+    color: #060a0f;
+    padding: 14px 32px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); }
+  .btn-ghost {
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    padding: 14px 32px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--cyan3); color: var(--text); }
+
+  .hero-stats {
+    display: flex;
+    gap: 48px;
+    margin-top: 72px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .hstat-val {
+    font-family: var(--font-hd);
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1;
+  }
+  .hstat-val span { color: var(--cyan); }
+  .hstat-label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .section-title {
+    font-family: var(--font-hd);
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 400;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+  .section-sub { font-size: 16px; color: var(--text2); max-width: 520px; font-weight: 300; }
+
+  /* ── ENDPOINTS TABLE ── */
+  .endpoint-grid { margin-top: 48px; display: flex; flex-direction: column; gap: 3px; }
+  .endpoint-row {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.15s;
+    cursor: default;
+  }
+  .endpoint-row:hover { border-color: var(--border2); background: var(--bg3); }
+  .method {
+    font-family: var(--font-hd);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-align: center;
+  }
+  .get  { background: rgba(34,197,94,0.12);  color: #22c55e; }
+  .post { background: rgba(245,200,66,0.12); color: var(--gold); }
+  .endpoint-path { font-family: monospace; font-size: 14px; color: var(--text); }
+  .endpoint-path .param { color: var(--cyan2); }
+  .endpoint-desc { font-size: 12px; color: var(--text3); text-align: right; }
+  .tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid;
+    display: inline-block;
+  }
+  .tag-free    { color: var(--green);   border-color: rgba(34,197,94,0.3); }
+  .tag-paid    { color: var(--gold);    border-color: rgba(245,200,66,0.3); }
+  .tag-admin   { color: #f472b6;        border-color: rgba(244,114,182,0.3); }
+
+  .endpoint-section-hd {
+    font-family: var(--font-hd);
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin: 32px 0 8px;
+    padding-left: 4px;
+  }
+
+  /* ── FEATURE CARDS ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+    margin-top: 48px;
+  }
+  .feat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+    transition: all 0.2s;
+  }
+  .feat-card:hover { border-color: var(--border2); background: var(--bg3); }
+  .feat-card:first-child { border-radius: 8px 0 0 0; }
+  .feat-card:nth-child(3) { border-radius: 0 8px 0 0; }
+  .feat-card:nth-last-child(3) { border-radius: 0 0 0 8px; }
+  .feat-card:last-child { border-radius: 0 0 8px 0; }
+  .feat-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  .feat-title {
+    font-family: var(--font-hd);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .feat-desc { font-size: 14px; color: var(--text2); font-weight: 300; line-height: 1.6; }
+
+  /* ── PRICING ── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 48px;
+    max-width: 760px;
+  }
+  .price-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 36px 32px;
+  }
+  .price-card.featured {
+    border-color: var(--cyan3);
+    background: rgba(0,212,255,0.04);
+  }
+  .price-card:first-child { border-radius: 8px 0 0 8px; }
+  .price-card:last-child  { border-radius: 0 8px 8px 0; }
+  .price-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+  .price-amount {
+    font-family: var(--font-hd);
+    font-size: 52px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--text);
+  }
+  .price-amount sup { font-size: 22px; vertical-align: super; color: var(--text2); }
+  .price-amount .period { font-size: 16px; color: var(--text3); font-family: var(--font-bd); font-weight: 300; }
+  .price-desc { font-size: 14px; color: var(--text2); margin: 12px 0 24px; font-weight: 300; }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .price-features li { font-size: 14px; color: var(--text2); display: flex; align-items: center; gap: 10px; }
+  .price-features li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--cyan3); flex-shrink: 0; }
+  .price-features li.yes::before { background: var(--green); }
+  .price-features li.no  { color: var(--text3); }
+  .price-features li.no::before { background: var(--text3); }
+  .price-btn {
+    display: block;
+    text-align: center;
+    margin-top: 28px;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .price-btn-outline { border: 1px solid var(--border2); color: var(--text2); }
+  .price-btn-outline:hover { border-color: var(--cyan3); color: var(--text); }
+  .price-btn-fill { background: var(--cyan); color: #060a0f; }
+  .price-btn-fill:hover { background: #fff; }
+  .price-featured-tag {
+    display: inline-block;
+    background: var(--cyan);
+    color: #060a0f;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-demo {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 40px;
+    max-width: 720px;
+  }
+  .code-bar {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .code-bar-title { font-size: 12px; color: var(--text3); margin-left: 8px; font-family: monospace; }
+  .code-body { padding: 24px; overflow-x: auto; }
+  .code-body pre {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text2);
+    white-space: pre;
+  }
+  .kw  { color: var(--cyan); }
+  .st  { color: #98d473; }
+  .cm  { color: var(--text3); }
+  .nm  { color: var(--gold); }
+  .res { color: #c792ea; }
+
+  /* ── DEPLOY STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 2px; margin-top: 40px; max-width: 640px; }
+  .step {
+    display: flex;
+    gap: 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    align-items: flex-start;
+    transition: all 0.15s;
+  }
+  .step:hover { border-color: var(--border2); }
+  .step:first-child { border-radius: 8px 8px 0 0; }
+  .step:last-child  { border-radius: 0 0 8px 8px; }
+  .step-num {
+    font-family: var(--font-hd);
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--cyan3);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 32px;
+  }
+  .step-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--text2); font-weight: 300; }
+  .step-code {
+    font-family: monospace;
+    font-size: 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: var(--cyan);
+    margin-top: 8px;
+    display: block;
+  }
+
+  /* ── STATS TICKER ── */
+  .ticker-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+    overflow: hidden;
+    background: var(--bg2);
+  }
+  .ticker {
+    display: flex;
+    gap: 64px;
+    animation: ticker 30s linear infinite;
+    white-space: nowrap;
+  }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .tick-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text2); }
+  .tick-item strong { color: var(--text); font-weight: 500; }
+  .tick-sep { color: var(--text3); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-logo { font-family: var(--font-hd); font-size: 18px; color: var(--text3); letter-spacing: 2px; }
+  .footer-logo span { color: var(--cyan3); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: var(--text3); text-decoration: none; }
+  .footer-links a:hover { color: var(--text2); }
+  .footer-copy { font-size: 12px; color: var(--text3); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    section { padding: 60px 20px; }
+    .hero-stats { gap: 28px; flex-wrap: wrap; justify-content: center; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .price-card:first-child { border-radius: 8px 8px 0 0; }
+    .price-card:last-child  { border-radius: 0 0 8px 8px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .feat-card { border-radius: 0 !important; }
+    .endpoint-row { grid-template-columns: 70px 1fr; }
+    .endpoint-desc { display: none; }
+    footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">BPL<span>API</span></a>
+  <div class="nav-links">
+    <a href="#endpoints">Endpoints</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#deploy">Deploy</a>
+    <a href="#docs" class="nav-cta">View Docs →</a>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="tick-item"><strong>2012–2026</strong> <span class="tick-sep">·</span> BPL Seasons</div>
+    <div class="tick-item"><strong>8</strong> <span class="tick-sep">·</span> Teams</div>
+    <div class="tick-item"><strong>300+</strong> <span class="tick-sep">·</span> Matches</div>
+    <div class="tick-item"><strong>500+</strong> <span class="tick-sep">·</span> Players</div>
+    <div class="tick-item"><strong>Bcash / Nagad</strong> <span class="tick-sep">·</span> Bangladesh Payments</div>
+    <div class="tick-item"><strong>Free tier</strong> <span class="tick-sep">·</span> Render.com ready</div>
+    <div class="tick-item"><strong>AI Predictions</strong> <span class="tick-sep">·</span> Win probability engine</div>
+    <div class="tick-item"><strong>Numeric only</strong> <span class="tick-sep">·</span> Governance compliant</div>
+    <!-- duplicate for seamless loop -->
+    <div class="tick-item"><strong>2012–2026</strong> <span class="tick-sep">·</span> BPL Seasons</div>
+    <div class="tick-item"><strong>8</strong> <span class="tick-sep">·</span> Teams</div>
+    <div class="tick-item"><strong>300+</strong> <span class="tick-sep">·</span> Matches</div>
+    <div class="tick-item"><strong>500+</strong> <span class="tick-sep">·</span> Players</div>
+    <div class="tick-item"><strong>Bcash / Nagad</strong> <span class="tick-sep">·</span> Bangladesh Payments</div>
+    <div class="tick-item"><strong>Free tier</strong> <span class="tick-sep">·</span> Render.com ready</div>
+    <div class="tick-item"><strong>AI Predictions</strong> <span class="tick-sep">·</span> Win probability engine</div>
+    <div class="tick-item"><strong>Numeric only</strong> <span class="tick-sep">·</span> Governance compliant</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    Live API — Bangladesh Premier League
+  </div>
+  <h1 class="hero-title">
+    <span class="line1">CRICKET</span>
+    <span class="line2">STATS API</span>
+    <span class="line3">BPL 2012 – 2026</span>
+  </h1>
+  <p class="hero-sub">
+    The only commercial-ready API for Bangladesh Premier League numeric statistics.
+    Built for fantasy apps, analytics platforms, and AI models.
+    Free & paid tiers. Bcash + Nagad payments. Deploy in minutes.
+  </p>
+  <div class="hero-actions">
+    <a href="#docs" class="btn-primary">Get API Key →</a>
+    <a href="#endpoints" class="btn-ghost">Browse Endpoints</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="hstat-val">10<span>+</span></div>
+      <div class="hstat-label">Seasons</div>
+    </div>
+    <div>
+      <div class="hstat-val">300<span>+</span></div>
+      <div class="hstat-label">Matches</div>
+    </div>
+    <div>
+      <div class="hstat-val">500<span>+</span></div>
+      <div class="hstat-label">Players</div>
+    </div>
+    <div>
+      <div class="hstat-val">99<span>%</span></div>
+      <div class="hstat-label">Uptime</div>
+    </div>
+  </div>
+</div>
+
+<!-- ENDPOINTS -->
+<section id="endpoints">
+  <div class="section-label">API Reference</div>
+  <h2 class="section-title">Every Endpoint</h2>
+  <p class="section-sub">Clean, predictable REST API. JSON responses. No rate limits on free tier.</p>
+
+  <div class="endpoint-grid">
+
+    <div class="endpoint-section-hd">Free — No Auth Required</div>
+
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/teams</span>
+      <span class="tag tag-free">free</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/teams/<span class="param">{id}</span>/players</span>
+      <span class="tag tag-free">free</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/players?role=&season=&min_runs=</span>
+      <span class="tag tag-free">free</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/players/<span class="param">{id}</span>/performances</span>
+      <span class="tag tag-free">free</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/matches?season=&team_id=</span>
+      <span class="tag tag-free">free</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/matches/season/<span class="param">{year}</span>/top-scorers</span>
+      <span class="tag tag-free">free</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/matches/season/<span class="param">{year}</span>/top-wicket-takers</span>
+      <span class="tag tag-free">free</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/matches/<span class="param">{id}</span></span>
+      <span class="tag tag-free">free</span>
+    </div>
+
+    <div class="endpoint-section-hd">Premium — API Key Required</div>
+
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/premium/predictions/<span class="param">{match_id}</span></span>
+      <span class="tag tag-paid">paid</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/premium/insights/<span class="param">{match_id}</span></span>
+      <span class="tag tag-paid">paid</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/premium/player-compare?player1_id=&player2_id=</span>
+      <span class="tag tag-paid">paid</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/bpl/premium/top-performers?season=2025</span>
+      <span class="tag tag-paid">paid</span>
+    </div>
+
+    <div class="endpoint-section-hd">Auth & Payments</div>
+
+    <div class="endpoint-row">
+      <span class="method post">POST</span>
+      <span class="endpoint-path">/auth/register</span>
+      <span class="tag tag-free">free</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method post">POST</span>
+      <span class="endpoint-path">/auth/token</span>
+      <span class="tag tag-free">free</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method post">POST</span>
+      <span class="endpoint-path">/payment/subscribe  { gateway: "bcash"|"nagad" }</span>
+      <span class="tag tag-paid">paid</span>
+    </div>
+
+    <div class="endpoint-section-hd">Admin</div>
+
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/admin/stats</span>
+      <span class="tag tag-admin">admin</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/admin/users</span>
+      <span class="tag tag-admin">admin</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method post">POST</span>
+      <span class="endpoint-path">/admin/users/<span class="param">{id}</span>/revoke-key</span>
+      <span class="tag tag-admin">admin</span>
+    </div>
+    <div class="endpoint-row">
+      <span class="method get">GET</span>
+      <span class="endpoint-path">/admin/subscriptions</span>
+      <span class="tag tag-admin">admin</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- CODE DEMO -->
+<section style="padding-top: 0;">
+  <div class="section-label">Quick Start</div>
+  <h2 class="section-title">One Request Away</h2>
+
+  <div class="code-demo">
+    <div class="code-bar">
+      <div class="code-dot" style="background:#ef4444;"></div>
+      <div class="code-dot" style="background:#f59e0b;"></div>
+      <div class="code-dot" style="background:#22c55e;"></div>
+      <span class="code-bar-title">example — get match predictions</span>
+    </div>
+    <div class="code-body">
+<pre><span class="cm"># Free: get top scorers in BPL 2025</span>
+<span class="kw">curl</span> https://bpl-cricket-api.onrender.com<span class="st">/bpl/matches/season/2025/top-scorers</span>
+
+<span class="cm"># Response</span>
+{
+  <span class="nm">"season"</span>: 2025,
+  <span class="nm">"top_scorers"</span>: [
+    { <span class="nm">"name"</span>: <span class="st">"Shakib Al Hasan"</span>, <span class="nm">"runs"</span>: <span class="res">612</span>, <span class="nm">"matches"</span>: <span class="res">12</span>, <span class="nm">"avg_sr"</span>: <span class="res">148.6</span> },
+    { <span class="nm">"name"</span>: <span class="st">"Tamim Iqbal"</span>,     <span class="nm">"runs"</span>: <span class="res">580</span>, <span class="nm">"matches"</span>: <span class="res">11</span>, <span class="nm">"avg_sr"</span>: <span class="res">135.2</span> }
+  ]
+}
+
+<span class="cm"># Paid: AI prediction for match 42</span>
+<span class="kw">curl</span> -H <span class="st">"Authorization: Bearer bpl_YOUR_API_KEY"</span> \
+     https://bpl-cricket-api.onrender.com<span class="st">/bpl/premium/predictions/42</span>
+
+<span class="cm"># Response</span>
+{
+  <span class="nm">"predicted_winner"</span>: { <span class="nm">"name"</span>: <span class="st">"Fortune Barishal"</span>, <span class="nm">"confidence"</span>: <span class="res">0.78</span> },
+  <span class="nm">"predicted_top_scorer"</span>: { <span class="nm">"name"</span>: <span class="st">"Shakib Al Hasan"</span>, <span class="nm">"runs"</span>: <span class="res">612</span> },
+  <span class="nm">"model"</span>: <span class="st">"statistical_v1"</span>
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">What's Included</div>
+  <h2 class="section-title">Built for Production</h2>
+  <p class="section-sub">Everything you need to build a fantasy cricket app, analytics dashboard, or AI model on BPL data.</p>
+
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon">🏏</div>
+      <div class="feat-title">Full BPL Dataset</div>
+      <div class="feat-desc">10 seasons of numeric match data, 300+ scorecards, 500+ player career stats. Runs, wickets, economy, strike rate, catches — all queryable.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🤖</div>
+      <div class="feat-title">AI Predictions</div>
+      <div class="feat-desc">Statistical win probability engine. Head-to-head history, venue averages, toss impact. Train your own Random Forest with 1 command.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">💳</div>
+      <div class="feat-title">Bcash & Nagad</div>
+      <div class="feat-desc">Bangladesh-native payment gateways fully integrated. Subscription creation → redirect → webhook → API key — complete flow ready.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔐</div>
+      <div class="feat-title">Role-Based Access</div>
+      <div class="feat-desc">superadmin / admin / paid / free tiers enforced on every endpoint. JWT tokens + API key auth. bcrypt passwords. Full audit log.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚖️</div>
+      <div class="feat-title">Governance Compliant</div>
+      <div class="feat-desc">Numeric stats only — no copyrighted commentary, no player images, no biographical text. Safe for commercial use under most jurisdictions.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🚀</div>
+      <div class="feat-title">Render Ready</div>
+      <div class="feat-desc">render.yaml included. Push to GitHub, connect Render, click deploy. Free tier live in under 2 minutes. Auto-migrates DB on startup.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-label">Access Tiers</div>
+  <h2 class="section-title">Simple Pricing</h2>
+  <p class="section-sub">Start free. Upgrade when you need AI predictions and premium insights.</p>
+
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-label">Free Tier</div>
+      <div class="price-amount">৳<span>0</span> <span class="period">/ forever</span></div>
+      <div class="price-desc">For developers, researchers, and hobbyists building on BPL data.</div>
+      <ul class="price-features">
+        <li class="yes">All team & player stats</li>
+        <li class="yes">Full match scorecards</li>
+        <li class="yes">Season leaderboards</li>
+        <li class="yes">Pagination & filters</li>
+        <li class="no">AI match predictions</li>
+        <li class="no">Player comparisons</li>
+        <li class="no">Premium insights</li>
+      </ul>
+      <a href="#docs" class="price-btn price-btn-outline">Get started free</a>
+    </div>
+
+    <div class="price-card featured">
+      <div class="price-featured-tag">Most Popular</div>
+      <div class="price-label">Premium</div>
+      <div class="price-amount">৳<span>500</span> <span class="period">/ month</span></div>
+      <div class="price-desc">For fantasy apps, analytics platforms, and serious cricket products.</div>
+      <ul class="price-features">
+        <li class="yes">Everything in Free</li>
+        <li class="yes">AI win predictions</li>
+        <li class="yes">Player comparisons</li>
+        <li class="yes">Venue & H2H insights</li>
+        <li class="yes">Top-performer rankings</li>
+        <li class="yes">Bcash / Nagad payment</li>
+        <li class="yes">Dedicated API key</li>
+      </ul>
+      <a href="#docs" class="price-btn price-btn-fill">Subscribe via Bcash / Nagad →</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEPLOY -->
+<section id="deploy">
+  <div class="section-label">Deployment</div>
+  <h2 class="section-title">Live in 5 Minutes</h2>
+  <p class="section-sub">Free hosting on Render.com. No credit card required. Singapore region for low latency.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div>
+        <div class="step-title">Clone & push to GitHub</div>
+        <div class="step-desc">Download the project zip, unzip it, init a git repo and push.</div>
+        <code class="step-code">git init && git add . && git commit -m "init" && gh repo create bpl-api --public --push</code>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div>
+        <div class="step-title">Connect Render.com</div>
+        <div class="step-desc">New Web Service → connect your GitHub repo. Render auto-reads render.yaml.</div>
+        <code class="step-code">render.yaml handles: build, start, env vars, health check</code>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div>
+        <div class="step-title">Add payment keys (optional)</div>
+        <div class="step-desc">Add BCASH_API_KEY and NAGAD_MERCHANT_KEY in Render dashboard environment settings.</div>
+        <code class="step-code">Environment → Add variables from .env.example</code>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div>
+        <div class="step-title">Hit your live API</div>
+        <div class="step-desc">Render gives you a public URL. Open /docs for the full Swagger UI.</div>
+        <code class="step-code">https://bpl-cricket-api.onrender.com/docs</code>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div>
+        <div class="step-title">Scrape real data</div>
+        <div class="step-desc">Run the scrapers locally to populate your DB with real BPL numeric stats.</div>
+        <code class="step-code">python -m scraper.scrape_bpl_season --all</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">BPL<span>API</span></div>
+  <div class="footer-links">
+    <a href="#endpoints">Endpoints</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#deploy">Deploy</a>
+    <a href="#docs">Docs</a>
+  </div>
+  <div class="footer-copy">BijoyFantasyCricketBD · MIT License · Numeric stats only</div>
+</footer>
+
+<script>
+  // Animate elements on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.feat-card, .price-card, .step, .endpoint-row').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    observer.observe(el);
+  });
+
+  // Stagger endpoint rows
+  document.querySelectorAll('.endpoint-row').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.03) + 's';
+  });
+</script>
+</body>
+</html>

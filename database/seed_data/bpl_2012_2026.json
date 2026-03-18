@@ -1,0 +1,15 @@
+{
+  "_comment": "BPL numeric seed data. Biography and commentary intentionally excluded.",
+  "seasons": [
+    {"year":2012,"champion":"Dhaka Gladiators","total_matches":28,"avg_score":147},
+    {"year":2013,"champion":"Comilla Victorians","total_matches":28,"avg_score":151},
+    {"year":2015,"champion":"Comilla Victorians","total_matches":28,"avg_score":155},
+    {"year":2016,"champion":"Comilla Victorians","total_matches":28,"avg_score":159},
+    {"year":2017,"champion":"Rajshahi Kings","total_matches":28,"avg_score":162},
+    {"year":2019,"champion":"Comilla Victorians","total_matches":28,"avg_score":160},
+    {"year":2022,"champion":"Fortune Barishal","total_matches":34,"avg_score":165},
+    {"year":2023,"champion":"Comilla Victorians","total_matches":34,"avg_score":168},
+    {"year":2024,"champion":"Rangpur Riders","total_matches":34,"avg_score":172},
+    {"year":2025,"champion":"Fortune Barishal","total_matches":34,"avg_score":175}
+  ]
+}

@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BijoyFantasyCricketBD — Investor Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05080d;--bg2:#080d14;--bg3:#0d1520;--bg4:#111d2b;
+  --border:#162030;--border2:#1e3048;--border3:#274060;
+  --c:#00e5ff;--c2:#00b4cc;--c3:#007a99;
+  --gold:#f7c948;--gold2:#c9a020;
+  --green:#22c55e;--red:#ef4444;--purple:#a78bfa;
+  --t1:#f0f8ff;--t2:#8ab4d4;--t3:#4a7a9b;--t4:#243d52;
+  --font-hd:'Bebas Neue',sans-serif;
+  --font-bd:'Outfit',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t1);font-family:var(--font-bd);font-size:15px;line-height:1.6;overflow-x:hidden}
+
+/* ── SCANLINE TEXTURE ── */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,229,255,0.008) 2px,rgba(0,229,255,0.008) 4px);pointer-events:none;z-index:9999}
+
+/* ── ANIMATED BG ── */
+.bg-anim{position:fixed;inset:0;z-index:0;overflow:hidden}
+.bg-anim::before{content:'';position:absolute;width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,0.07) 0%,transparent 70%);top:-300px;left:-300px;animation:drift1 20s ease-in-out infinite}
+.bg-anim::after{content:'';position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(247,201,72,0.05) 0%,transparent 70%);bottom:-200px;right:-200px;animation:drift2 25s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-60px,-40px)}}
+.grid-lines{position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);background-size:80px 80px;z-index:0}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1280px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(5,8,13,0.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:64px;display:flex;align-items:center}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;width:100%}
+.logo{font-family:var(--font-hd);font-size:24px;letter-spacing:3px;color:var(--t1);text-decoration:none}
+.logo em{color:var(--c);font-style:normal}
+.logo sup{font-family:var(--font-bd);font-size:9px;font-weight:500;color:var(--gold);letter-spacing:2px;vertical-align:super;margin-left:4px}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-tag{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:rgba(247,201,72,0.1);border:1px solid rgba(247,201,72,0.25);padding:5px 12px;border-radius:3px}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:13px;color:var(--t3);text-decoration:none;font-weight:400;transition:color .15s}
+.nav-links a:hover{color:var(--t1)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;padding:80px 0 60px}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,0.4)}70%{opacity:.8;box-shadow:0 0 0 8px rgba(34,197,94,0)}}
+.eyebrow-txt{font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--green)}
+.hero-h1{font-family:var(--font-hd);font-size:clamp(52px,6vw,88px);line-height:.95;letter-spacing:1px;margin-bottom:24px}
+.hero-h1 .l1{color:var(--t1);display:block}
+.hero-h1 .l2{color:var(--c);display:block}
+.hero-h1 .l3{color:var(--t3);display:block;font-size:.45em;letter-spacing:5px;margin-top:10px}
+.hero-p{font-size:16px;color:var(--t2);font-weight:300;line-height:1.75;max-width:460px;margin-bottom:36px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-main{background:var(--c);color:#05080d;padding:14px 28px;border-radius:4px;font-size:14px;font-weight:600;text-decoration:none;letter-spacing:.5px;transition:all .2s;border:none;cursor:pointer}
+.btn-main:hover{background:#fff;transform:translateY(-2px)}
+.btn-outline{border:1px solid var(--border3);color:var(--t2);padding:14px 28px;border-radius:4px;font-size:14px;font-weight:400;text-decoration:none;transition:all .2s}
+.btn-outline:hover{border-color:var(--c3);color:var(--t1)}
+.hero-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:40px}
+.kpi-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px 20px;transition:border-color .2s}
+.kpi-card:hover{border-color:var(--border2)}
+.kpi-val{font-family:var(--font-hd);font-size:36px;color:var(--t1);line-height:1}
+.kpi-val em{color:var(--c);font-style:normal}
+.kpi-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
+.kpi-delta{font-size:11px;color:var(--green);margin-top:2px}
+
+/* ── PHONE MOCKUP ── */
+.phone-wrap{display:flex;justify-content:center;align-items:center;position:relative}
+.phone-glow{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(0,229,255,0.15),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse-glow 3s ease-in-out infinite}
+@keyframes pulse-glow{0%,100%{opacity:.6;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
+.phone{width:260px;background:var(--bg3);border:2px solid var(--border3);border-radius:32px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(0,229,255,0.1);position:relative;z-index:2}
+.phone-notch{background:var(--bg2);height:32px;display:flex;align-items:center;justify-content:center}
+.notch-cam{width:10px;height:10px;border-radius:50%;background:#111}
+.phone-screen{padding:16px 14px}
+.ps-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ps-title{font-family:var(--font-hd);font-size:18px;letter-spacing:1px;color:var(--t1)}
+.ps-budget{font-size:12px;color:var(--c);font-weight:500}
+.ps-pitch{background:#1a4d1a;border-radius:8px;height:100px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;position:relative;overflow:hidden}
+.ps-pitch::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,0.03) 0,rgba(255,255,255,0.03) 1px,transparent 1px,transparent 20%)}
+.pitch-svg{width:80px;opacity:.5}
+.ps-players{display:flex;flex-direction:column;gap:6px}
+.ps-player{display:flex;align-items:center;gap:8px;background:var(--bg4);border-radius:6px;padding:7px 10px}
+.pp-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0}
+.pp-name{font-size:11px;font-weight:500;color:var(--t1);flex:1}
+.pp-role{font-size:9px;color:var(--t3)}
+.pp-pts{font-size:11px;font-weight:600;color:var(--c)}
+.pp-add{width:20px;height:20px;border-radius:4px;background:var(--c);border:none;cursor:pointer;font-size:13px;font-weight:700;color:#05080d;display:flex;align-items:center;justify-content:center}
+
+/* ── SECTION BASE ── */
+.section{padding:100px 0}
+.s-eyebrow{font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--c);margin-bottom:12px}
+.s-title{font-family:var(--font-hd);font-size:clamp(38px,5vw,64px);line-height:1;letter-spacing:.5px;color:var(--t1);margin-bottom:16px}
+.s-sub{font-size:15px;color:var(--t2);font-weight:300;max-width:540px;line-height:1.75}
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent);margin:0}
+
+/* ── MARKET / TRACTION ── */
+.market-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:48px}
+.mcard{background:var(--bg2);border:1px solid var(--border);padding:28px 24px;transition:all .2s}
+.mcard:hover{border-color:var(--c3);background:var(--bg3)}
+.mcard:first-child{border-radius:8px 0 0 8px}
+.mcard:last-child{border-radius:0 8px 8px 0}
+.mc-val{font-family:var(--font-hd);font-size:44px;color:var(--t1);line-height:1}
+.mc-val span{color:var(--c)}
+.mc-lbl{font-size:12px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:6px}
+.mc-note{font-size:12px;color:var(--t2);margin-top:8px;font-weight:300}
+
+/* ── DASHBOARD PREVIEW ── */
+.dash-preview{margin-top:48px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.dash-bar{background:var(--bg3);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;gap:8px}
+.db{width:11px;height:11px;border-radius:50%}
+.dash-bar span{font-size:12px;color:var(--t3);margin-left:8px;font-family:monospace}
+.dash-content{display:grid;grid-template-columns:200px 1fr 260px;min-height:480px}
+.d-sidebar{border-right:1px solid var(--border);padding:20px 0}
+.d-nav-item{padding:9px 20px;font-size:12px;color:var(--t3);display:flex;align-items:center;gap:8px;cursor:pointer;transition:all .15s;border-left:2px solid transparent}
+.d-nav-item:hover{color:var(--t2);background:var(--bg3)}
+.d-nav-item.active{color:var(--t1);border-left-color:var(--c);background:rgba(0,229,255,0.04);font-weight:500}
+.d-nav-icon{width:6px;height:6px;border-radius:50%;background:var(--t4);flex-shrink:0;transition:background .15s}
+.d-nav-item.active .d-nav-icon{background:var(--c)}
+.d-nav-section{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:2px;padding:16px 20px 6px;margin-top:8px}
+.d-main{padding:20px;display:flex;flex-direction:column;gap:16px}
+.d-topbar{display:flex;align-items:center;justify-content:space-between}
+.d-title{font-family:var(--font-hd);font-size:22px;letter-spacing:1px}
+.d-tags{display:flex;gap:6px}
+.dtag{font-size:10px;padding:3px 8px;border-radius:20px;border:1px solid}
+.dtag-c{color:var(--c);border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.06)}
+.dtag-g{color:var(--gold);border-color:rgba(247,201,72,0.3);background:rgba(247,201,72,0.06)}
+.d-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dm{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px 14px}
+.dm-val{font-family:var(--font-hd);font-size:26px;color:var(--t1)}
+.dm-lbl{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.dm-delta{font-size:10px;margin-top:2px}
+.up{color:var(--green)}.dn{color:var(--red)}
+.d-teams{display:flex;flex-direction:column;gap:6px}
+.dt{background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.dt-hd{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.dt-abbr{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#05080d;flex-shrink:0}
+.dt-name{font-size:13px;font-weight:500;color:var(--t1)}
+.dt-meta{font-size:10px;color:var(--t3)}
+.dt-pts{margin-left:auto;font-size:11px;color:var(--c);background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);padding:2px 8px;border-radius:20px}
+.dt-table{width:100%;border-collapse:collapse;font-size:11px}
+.dt-table th{color:var(--t4);font-weight:400;text-align:left;padding:6px 14px;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
+.dt-table td{padding:6px 14px;color:var(--t2);border-top:1px solid var(--border)}
+.pos-b{font-size:9px;padding:2px 6px;border-radius:3px}
+.pb-bat{background:rgba(66,165,245,0.15);color:#64b5f6}
+.pb-bwl{background:rgba(230,92,0,0.15);color:#ff7043}
+.pb-ar {background:rgba(46,125,50,0.15);color:#66bb6a}
+.pb-wk {background:rgba(106,27,154,0.15);color:#ab47bc}
+.pts-h{color:var(--c);font-weight:600}
+/* right panel */
+.d-right{border-left:1px solid var(--border);padding:16px 14px;display:flex;flex-direction:column;gap:10px}
+.dr-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.dr-title{font-family:var(--font-hd);font-size:16px;letter-spacing:1px}
+.budget-row{display:flex;justify-content:space-between;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 12px}
+.br-val{font-family:var(--font-hd);font-size:22px;color:var(--t1)}
+.br-lbl{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.deadline{background:rgba(247,201,72,0.06);border:1px solid rgba(247,201,72,0.2);border-radius:6px;padding:8px 10px;font-size:11px;color:var(--gold);display:flex;align-items:center;gap:6px}
+.pl-list{display:flex;flex-direction:column;gap:4px;flex:1;overflow:hidden}
+.pl-item{display:flex;align-items:center;gap:8px;background:var(--bg3);border-radius:6px;padding:7px 10px;border:1px solid var(--border);transition:border-color .15s;cursor:pointer}
+.pl-item:hover{border-color:var(--c3)}
+.pl-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0}
+.pl-name{font-size:11px;font-weight:500;color:var(--t1);flex:1}
+.pl-sub{font-size:9px;color:var(--t3)}
+.pl-price{font-size:11px;color:var(--t2);font-weight:500}
+.pl-add{width:20px;height:20px;background:var(--c);border:none;border-radius:3px;cursor:pointer;font-size:13px;font-weight:700;color:#05080d;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.subs-area{border:1px solid var(--border);border-radius:6px;padding:10px;background:var(--bg3)}
+.subs-title{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.subs-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.sub-slot{height:34px;border:1px dashed var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--t4)}
+
+/* ── AI PREDICTIONS PANEL ── */
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:48px}
+.ai-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;transition:all .2s;position:relative;overflow:hidden}
+.ai-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--c),transparent)}
+.ai-card:hover{border-color:var(--border3);transform:translateY(-2px)}
+.ai-match{font-size:12px;color:var(--t3);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.ai-winner{font-family:var(--font-hd);font-size:28px;color:var(--t1);letter-spacing:.5px;margin-bottom:4px}
+.ai-conf{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.conf-bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:2px}
+.conf-bar{height:4px;border-radius:2px;background:linear-gradient(90deg,var(--c2),var(--c))}
+.conf-pct{font-size:11px;color:var(--c);font-weight:600}
+.ai-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.ai-stat{background:var(--bg3);border-radius:6px;padding:8px 10px}
+.ai-stat-lbl{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:1px}
+.ai-stat-val{font-size:13px;font-weight:500;color:var(--t1);margin-top:2px}
+.ai-badge{font-size:9px;padding:2px 8px;border-radius:20px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);color:var(--purple);margin-left:auto}
+
+/* ── PAYMENT FLOW ── */
+.pay-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:48px;position:relative}
+.pay-flow::before{content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,var(--border2),var(--c3),var(--border2));z-index:0}
+.pf-step{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;position:relative;z-index:1}
+.pf-circle{width:56px;height:56px;border-radius:50%;background:var(--bg3);border:1px solid var(--border3);display:flex;align-items:center;justify-content:center;font-size:20px;transition:all .2s}
+.pf-step:hover .pf-circle{border-color:var(--c);background:rgba(0,229,255,0.08)}
+.pf-title{font-size:12px;font-weight:500;color:var(--t2)}
+.pf-sub{font-size:11px;color:var(--t3);font-weight:300}
+.pf-arrow{position:absolute;top:28px;right:-10px;color:var(--c3);font-size:18px;transform:translateY(-50%)}
+
+/* ── TECH STACK ── */
+.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:40px}
+.tech-item{background:var(--bg2);border:1px solid var(--border);padding:20px 24px;display:flex;align-items:center;gap:14px;transition:all .15s}
+.tech-item:hover{background:var(--bg3);border-color:var(--border2)}
+.tech-item:first-child{border-radius:8px 0 0 0}
+.tech-item:nth-child(3){border-radius:0 8px 0 0}
+.tech-item:nth-last-child(3){border-radius:0 0 0 8px}
+.tech-item:last-child{border-radius:0 0 8px 0}
+.tech-icon{font-size:24px;flex-shrink:0}
+.tech-name{font-size:14px;font-weight:500;color:var(--t1)}
+.tech-role{font-size:12px;color:var(--t3)}
+
+/* ── ROADMAP ── */
+.roadmap{display:flex;flex-direction:column;gap:2px;margin-top:40px}
+.rm-item{display:flex;gap:24px;background:var(--bg2);border:1px solid var(--border);padding:20px 24px;transition:border-color .15s}
+.rm-item:hover{border-color:var(--border2)}
+.rm-item:first-child{border-radius:8px 8px 0 0}
+.rm-item:last-child{border-radius:0 0 8px 8px}
+.rm-quarter{font-family:var(--font-hd);font-size:28px;color:var(--t4);flex-shrink:0;width:60px;line-height:1.1}
+.rm-quarter.done{color:var(--green)}
+.rm-quarter.now{color:var(--c)}
+.rm-quarter.next{color:var(--gold)}
+.rm-title{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:4px}
+.rm-items{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.rm-tag{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--t3)}
+.rm-tag.done{color:var(--green);border-color:rgba(34,197,94,0.25);background:rgba(34,197,94,0.05)}
+.rm-tag.live{color:var(--c);border-color:rgba(0,229,255,0.25);background:rgba(0,229,255,0.05)}
+
+/* ── REVENUE ── */
+.rev-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:48px;align-items:center}
+.rev-chart{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px}
+.rev-chart-title{font-family:var(--font-hd);font-size:18px;color:var(--t1);margin-bottom:20px;letter-spacing:.5px}
+.chart-bars{display:flex;align-items:flex-end;gap:10px;height:140px}
+.cbar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.cbar{width:100%;border-radius:3px 3px 0 0;transition:all .3s;cursor:pointer}
+.cbar:hover{filter:brightness(1.2)}
+.cbar-lbl{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:.5px}
+.cbar-val{font-size:10px;color:var(--t2);font-weight:500}
+.rev-breakdown{display:flex;flex-direction:column;gap:12px}
+.rb-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px}
+.rb-icon{font-size:22px}
+.rb-name{font-size:13px;font-weight:500;color:var(--t1)}
+.rb-desc{font-size:12px;color:var(--t3)}
+.rb-amount{margin-left:auto;text-align:right}
+.rb-val{font-family:var(--font-hd);font-size:22px;color:var(--t1)}
+.rb-pct{font-size:11px;color:var(--green)}
+
+/* ── TEAM ── */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:40px}
+.team-card{background:var(--bg2);border:1px solid var(--border);padding:28px 24px;transition:all .2s}
+.team-card:hover{border-color:var(--border3);background:var(--bg3)}
+.team-card:first-child{border-radius:8px 0 0 8px}
+.team-card:last-child{border-radius:0 8px 8px 0}
+.tc-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:16px;border:2px solid var(--border2)}
+.tc-name{font-size:14px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.tc-role{font-size:11px;color:var(--c);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.tc-bio{font-size:13px;color:var(--t2);font-weight:300;line-height:1.6}
+
+/* ── CTA ── */
+.cta-section{padding:100px 0;text-align:center}
+.cta-inner{background:var(--bg2);border:1px solid var(--border3);border-radius:16px;padding:64px 48px;position:relative;overflow:hidden}
+.cta-inner::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,229,255,0.06),transparent 70%)}
+.cta-label{font-size:11px;color:var(--c);text-transform:uppercase;letter-spacing:3px;font-weight:500;margin-bottom:16px}
+.cta-h2{font-family:var(--font-hd);font-size:clamp(40px,6vw,72px);color:var(--t1);line-height:1;margin-bottom:20px}
+.cta-p{font-size:16px;color:var(--t2);font-weight:300;max-width:480px;margin:0 auto 36px;line-height:1.75}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:32px}
+.contact-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center}
+.cc-lbl{font-size:10px;color:var(--t4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.cc-val{font-size:13px;color:var(--t1)}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:32px 0}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-left{font-family:var(--font-hd);font-size:18px;color:var(--t4);letter-spacing:2px}
+.footer-left em{color:var(--c3);font-style:normal}
+.footer-right{font-size:12px;color:var(--t4)}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:48px}
+  .phone-wrap{display:none}
+  .market-grid{grid-template-columns:1fr 1fr}
+  .mcard:first-child,.mcard:last-child{border-radius:0}
+  .dash-content{grid-template-columns:1fr}
+  .d-sidebar,.d-right{display:none}
+  .ai-grid{grid-template-columns:1fr}
+  .pay-flow{grid-template-columns:1fr 1fr;gap:16px}
+  .pay-flow::before{display:none}
+  .tech-grid{grid-template-columns:1fr 1fr}
+  .rev-grid{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:1fr}
+  .team-card{border-radius:0!important}
+  .contact-grid{grid-template-columns:1fr}
+  nav .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+<div class="bg-anim"></div>
+<div class="grid-lines"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="wrap nav-inner">
+    <a href="#" class="logo">Bijoy<em>Fantasy</em><sup>BD</sup></a>
+    <div class="nav-right">
+      <span class="nav-tag">Investor Deck 2025</span>
+      <div class="nav-links">
+        <a href="#product">Product</a>
+        <a href="#market">Market</a>
+        <a href="#revenue">Revenue</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="wrap" id="product">
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">
+          <span class="live-dot"></span>
+          <span class="eyebrow-txt">Bangladesh's #1 Fantasy Cricket Platform</span>
+        </div>
+        <h1 class="hero-h1">
+          <span class="l1">FANTASY</span>
+          <span class="l2">CRICKET</span>
+          <span class="l3">Bangladesh Premier League · 2025</span>
+        </h1>
+        <p class="hero-p">BijoyFantasyCricketBD is a full-stack fantasy cricket platform built for the Bangladeshi market — combining live BPL stats, AI-powered predictions, and local payment gateways (Bcash & Nagad) into one commercial-ready product.</p>
+        <div class="hero-btns">
+          <a href="#product" class="btn-main">Explore the Platform</a>
+          <a href="#contact" class="btn-outline">Talk to the Founder</a>
+        </div>
+        <div class="hero-kpis">
+          <div class="kpi-card">
+            <div class="kpi-val">৳<em>2.4</em>L</div>
+            <div class="kpi-lbl">Monthly Revenue Potential</div>
+            <div class="kpi-delta">↑ at 500 paid users</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val"><em>163</em>M</div>
+            <div class="kpi-lbl">Bangladesh Cricket Fans</div>
+            <div class="kpi-delta">Addressable market</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val"><em>10</em>+</div>
+            <div class="kpi-lbl">BPL Seasons Covered</div>
+            <div class="kpi-delta">2012 – 2026</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val"><em>0</em></div>
+            <div class="kpi-lbl">Direct Competitors</div>
+            <div class="kpi-delta">First mover advantage</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHONE MOCKUP -->
+      <div class="phone-wrap">
+        <div class="phone-glow"></div>
+        <div class="phone">
+          <div class="phone-notch"><div class="notch-cam"></div></div>
+          <div class="phone-screen">
+            <div class="ps-header">
+              <div class="ps-title">PICK TEAM</div>
+              <div class="ps-budget">£100.0m</div>
+            </div>
+            <div class="ps-pitch">
+              <svg class="pitch-svg" viewBox="0 0 80 60">
+                <ellipse cx="40" cy="30" rx="38" ry="27" fill="none" stroke="#fff" stroke-width=".5" opacity=".4"/>
+                <rect x="28" y="16" width="24" height="28" fill="none" stroke="#fff" stroke-width=".5" opacity=".4"/>
+                <rect x="32" y="20" width="16" height="20" fill="none" stroke="#fff" stroke-width=".3" opacity=".3"/>
+                <line x1="32" y1="30" x2="48" y2="30" stroke="#fff" stroke-width=".3" opacity=".3"/>
+              </svg>
+            </div>
+            <div class="ps-players">
+              <div class="ps-player">
+                <div class="pp-av" style="background:rgba(247,201,72,.15);color:#f7c948">SK</div>
+                <div><div class="pp-name">Shakib Al Hasan</div><div class="pp-role">AR · BAN</div></div>
+                <div class="pp-pts">169</div>
+                <div class="pp-add" style="background:#ef4444;color:#fff">−</div>
+              </div>
+              <div class="ps-player">
+                <div class="pp-av" style="background:rgba(0,229,255,.12);color:#00e5ff">MR</div>
+                <div><div class="pp-name">Mustafizur Rahman</div><div class="pp-role">BWL · BAN</div></div>
+                <div class="pp-pts">88</div>
+                <div class="pp-add">+</div>
+              </div>
+              <div class="ps-player">
+                <div class="pp-av" style="background:rgba(66,165,245,.12);color:#42a5f5">LD</div>
+                <div><div class="pp-name">Liton Das</div><div class="pp-role">WK · BAN</div></div>
+                <div class="pp-pts">62</div>
+                <div class="pp-add">+</div>
+              </div>
+              <div class="ps-player">
+                <div class="pp-av" style="background:rgba(102,187,106,.12);color:#66bb6a">TH</div>
+                <div><div class="pp-name">Towhid Hridoy</div><div class="pp-role">BAT · BAN</div></div>
+                <div class="pp-pts">44</div>
+                <div class="pp-add">+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- MARKET -->
+<section class="section" id="market">
+  <div class="wrap">
+    <div class="s-eyebrow reveal">Market Opportunity</div>
+    <h2 class="s-title reveal">Why Bangladesh. Why Now.</h2>
+    <p class="s-sub reveal">Cricket is not just a sport in Bangladesh — it is the national religion. BPL is the highest-viewed T20 league in South Asia after IPL. No fantasy platform exists that is built natively for this market.</p>
+    <div class="market-grid">
+      <div class="mcard reveal">
+        <div class="mc-val"><span>163</span>M</div>
+        <div class="mc-lbl">Cricket Fans in BD</div>
+        <div class="mc-note">98% national TV viewership during BPL season</div>
+      </div>
+      <div class="mcard reveal">
+        <div class="mc-val">$<span>2.1</span>B</div>
+        <div class="mc-lbl">Fantasy Sports Market</div>
+        <div class="mc-note">South Asia TAM, growing 28% YoY</div>
+      </div>
+      <div class="mcard reveal">
+        <div class="mc-val"><span>85</span>M</div>
+        <div class="mc-lbl">Mobile Internet Users</div>
+        <div class="mc-note">Bangladesh digital penetration 2025</div>
+      </div>
+      <div class="mcard reveal">
+        <div class="mc-val"><span>0</span></div>
+        <div class="mc-lbl">BPL-Native Competitors</div>
+        <div class="mc-note">Dream11, MPL do not support BPL natively</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DASHBOARD PREVIEW -->
+<section class="section" style="padding-top:60px">
+  <div class="wrap">
+    <div class="s-eyebrow reveal">Platform Preview</div>
+    <h2 class="s-title reveal">Admin + Player Dashboard</h2>
+    <p class="s-sub reveal">Full superadmin portal for user management, subscriptions, and fantasy points — alongside the live player picker used by end users.</p>
+
+    <div class="dash-preview reveal">
+      <div class="dash-bar">
+        <div class="db" style="background:#ef4444"></div>
+        <div class="db" style="background:#f59e0b"></div>
+        <div class="db" style="background:#22c55e"></div>
+        <span>bijoy-fantasy-cricket-bd.onrender.com/admin</span>
+      </div>
+      <div class="dash-content">
+        <!-- Sidebar -->
+        <div class="d-sidebar">
+          <div class="d-nav-section">Main</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Dashboard</div>
+          <div class="d-nav-item active"><span class="d-nav-icon"></span>Fantasy Points</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Fixtures</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Results</div>
+          <div class="d-nav-section">Data</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Teams</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Players</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Seasons</div>
+          <div class="d-nav-section">Access</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Users</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Subscriptions</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Admins</div>
+          <div class="d-nav-section">Config</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Scoring Rules</div>
+          <div class="d-nav-item"><span class="d-nav-icon"></span>Team Rules</div>
+        </div>
+        <!-- Main content -->
+        <div class="d-main">
+          <div class="d-topbar">
+            <div class="d-title">FANTASY POINTS</div>
+            <div class="d-tags"><span class="dtag dtag-c">BPL 2025</span><span class="dtag dtag-g">GW 17</span></div>
+          </div>
+          <div class="d-metrics">
+            <div class="dm"><div class="dm-val">1,284</div><div class="dm-lbl">Teams</div><div class="dm-delta up">+38 GW</div></div>
+            <div class="dm"><div class="dm-val">9,450</div><div class="dm-lbl">Users</div><div class="dm-delta up">+152 new</div></div>
+            <div class="dm"><div class="dm-val">৳2.4L</div><div class="dm-lbl">Revenue</div><div class="dm-delta up">+12% MoM</div></div>
+            <div class="dm"><div class="dm-val">312</div><div class="dm-lbl">Paid Subs</div><div class="dm-delta dn">−4 expired</div></div>
+          </div>
+          <div class="d-teams">
+            <div class="dt">
+              <div class="dt-hd">
+                <div class="dt-abbr" style="background:#00b8cc">FB</div>
+                <div><div class="dt-name">Fortune Barishal</div><div class="dt-meta">2 players</div></div>
+                <span class="dt-pts">182 pts</span>
+              </div>
+              <table class="dt-table">
+                <tr><th>Player</th><th>Pos</th><th>Runs</th><th>Wkts</th><th>Catches</th><th>Points</th></tr>
+                <tr><td>Shakib Al Hasan</td><td><span class="pos-b pb-ar">AR</span></td><td>45</td><td>2</td><td>1</td><td class="pts-h">169</td></tr>
+                <tr><td>Mehidy Hasan</td><td><span class="pos-b pb-ar">AR</span></td><td>19</td><td>0</td><td>0</td><td class="pts-h">23</td></tr>
+              </table>
+            </div>
+            <div class="dt">
+              <div class="dt-hd">
+                <div class="dt-abbr" style="background:#ff7043">CV</div>
+                <div><div class="dt-name">Comilla Victorians</div><div class="dt-meta">3 players</div></div>
+                <span class="dt-pts">93 pts</span>
+              </div>
+              <table class="dt-table">
+                <tr><th>Player</th><th>Pos</th><th>Runs</th><th>Wkts</th><th>Catches</th><th>Points</th></tr>
+                <tr><td>Liton Das</td><td><span class="pos-b pb-wk">WK</span></td><td>0</td><td>1</td><td>0</td><td style="color:var(--red)">−25</td></tr>
+                <tr><td>Towhid Hridoy</td><td><span class="pos-b pb-bat">BAT</span></td><td>16</td><td>0</td><td>0</td><td class="pts-h">13</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- Right panel -->
+        <div class="d-right">
+          <div class="dr-hd">
+            <div style="font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:1px">U19 Cricket</div>
+            <span class="dtag dtag-c" style="font-size:9px">GW 17</span>
+          </div>
+          <div class="dr-title">PICK TEAM</div>
+          <div class="budget-row">
+            <div><div class="br-val">£94.5m</div><div class="br-lbl">Remaining</div></div>
+            <div style="text-align:right"><div class="br-val">1/15</div><div class="br-lbl">Squad</div></div>
+          </div>
+          <div class="deadline">⏰ GW17 · Deadline: Sat 20 Dec, 17:00</div>
+          <div class="pl-list">
+            <div class="pl-item">
+              <div class="pl-av" style="background:rgba(247,201,72,.12);color:#f7c948">SK</div>
+              <div><div class="pl-name">Shakib Al Hasan</div><div class="pl-sub">AR · BAN · 169pts</div></div>
+              <div class="pl-price">£9.5m</div>
+              <div class="pl-add" style="background:#ef4444;color:#fff">−</div>
+            </div>
+            <div class="pl-item">
+              <div class="pl-av" style="background:rgba(255,112,67,.12);color:#ff7043">MR</div>
+              <div><div class="pl-name">Mustafizur Rahman</div><div class="pl-sub">BWL · BAN · 88pts</div></div>
+              <div class="pl-price">£8.0m</div>
+              <div class="pl-add">+</div>
+            </div>
+            <div class="pl-item">
+              <div class="pl-av" style="background:rgba(66,165,245,.12);color:#42a5f5">TI</div>
+              <div><div class="pl-name">Tamim Iqbal</div><div class="pl-sub">BAT · BAN · 55pts</div></div>
+              <div class="pl-price">£8.5m</div>
+              <div class="pl-add">+</div>
+            </div>
+            <div class="pl-item">
+              <div class="pl-av" style="background:rgba(102,187,106,.12);color:#66bb6a">NH</div>
+              <div><div class="pl-name">Nurul Hasan</div><div class="pl-sub">WK · BAN · 72pts</div></div>
+              <div class="pl-price">£7.0m</div>
+              <div class="pl-add">+</div>
+            </div>
+            <div class="pl-item">
+              <div class="pl-av" style="background:rgba(171,71,188,.12);color:#ab47bc">TA</div>
+              <div><div class="pl-name">Taskin Ahmed</div><div class="pl-sub">BWL · BAN · 61pts</div></div>
+              <div class="pl-price">£7.5m</div>
+              <div class="pl-add">+</div>
+            </div>
+          </div>
+          <div class="subs-area">
+            <div class="subs-title">Substitutes — 0 players</div>
+            <div class="subs-slots">
+              <div class="sub-slot">Empty</div><div class="sub-slot">Empty</div>
+              <div class="sub-slot">Empty</div><div class="sub-slot">Empty</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AI PREDICTIONS -->
+<section class="section">
+  <div class="wrap">
+    <div class="s-eyebrow reveal">Premium Feature</div>
+    <h2 class="s-title reveal">AI Match Predictions</h2>
+    <p class="s-sub reveal">Statistical win probability engine trained on 300+ BPL matches. Premium subscribers get predicted winners, top scorers, and venue insights before every match.</p>
+    <div class="ai-grid">
+      <div class="ai-card reveal">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div class="ai-match">FB vs RR · GW17 · Sher-e-Bangla</div>
+          <span class="ai-badge">AI PREDICTION</span>
+        </div>
+        <div class="ai-winner">Fortune Barishal</div>
+        <div class="ai-conf">
+          <div class="conf-bar-wrap"><div class="conf-bar" style="width:78%"></div></div>
+          <span class="conf-pct">78% conf</span>
+        </div>
+        <div class="ai-stats">
+          <div class="ai-stat"><div class="ai-stat-lbl">Top Scorer</div><div class="ai-stat-val">Shakib Al Hasan</div></div>
+          <div class="ai-stat"><div class="ai-stat-lbl">Top Wickets</div><div class="ai-stat-val">Mustafizur 3W</div></div>
+          <div class="ai-stat"><div class="ai-stat-lbl">Pred. Score</div><div class="ai-stat-val">178 / 6</div></div>
+        </div>
+      </div>
+      <div class="ai-card reveal">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div class="ai-match">DC vs CV · GW17 · Zahur Ahmed</div>
+          <span class="ai-badge">AI PREDICTION</span>
+        </div>
+        <div class="ai-winner">Dhaka Capitals</div>
+        <div class="ai-conf">
+          <div class="conf-bar-wrap"><div class="conf-bar" style="width:64%"></div></div>
+          <span class="conf-pct">64% conf</span>
+        </div>
+        <div class="ai-stats">
+          <div class="ai-stat"><div class="ai-stat-lbl">Top Scorer</div><div class="ai-stat-val">Towhid Hridoy</div></div>
+          <div class="ai-stat"><div class="ai-stat-lbl">Top Wickets</div><div class="ai-stat-val">Shoriful 2W</div></div>
+          <div class="ai-stat"><div class="ai-stat-lbl">Pred. Score</div><div class="ai-stat-val">161 / 7</div></div>
+        </div>
+      </div>
+      <div class="ai-card reveal">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div class="ai-match">SS vs CK · GW17 · Sylhet Intl.</div>
+          <span class="ai-badge">AI PREDICTION</span>
+        </div>
+        <div class="ai-winner">Sylhet Strikers</div>
+        <div class="ai-conf">
+          <div class="conf-bar-wrap"><div class="conf-bar" style="width:71%"></div></div>
+          <span class="conf-pct">71% conf</span>
+        </div>
+        <div class="ai-stats">
+          <div class="ai-stat"><div class="ai-stat-lbl">Top Scorer</div><div class="ai-stat-val">Tamim Iqbal</div></div>
+          <div class="ai-stat"><div class="ai-stat-lbl">Top Wickets</div><div class="ai-stat-val">Mehidy 2W</div></div>
+          <div class="ai-stat"><div class="ai-stat-lbl">Pred. Score</div><div class="ai-stat-val">168 / 5</div></div>
+        </div>
+      </div>
+      <div class="ai-card reveal">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div class="ai-match">RR vs KT · GW17 · Shahid Chandu</div>
+          <span class="ai-badge">AI PREDICTION</span>
+        </div>
+        <div class="ai-winner">Rangpur Riders</div>
+        <div class="ai-conf">
+          <div class="conf-bar-wrap"><div class="conf-bar" style="width:69%"></div></div>
+          <span class="conf-pct">69% conf</span>
+        </div>
+        <div class="ai-stats">
+          <div class="ai-stat"><div class="ai-stat-lbl">Top Scorer</div><div class="ai-stat-val">Mohammad Naim</div></div>
+          <div class="ai-stat"><div class="ai-stat-lbl">Top Wickets</div><div class="ai-stat-val">Taskin 2W</div></div>
+          <div class="ai-stat"><div class="ai-stat-lbl">Pred. Score</div><div class="ai-stat-val">172 / 6</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- REVENUE -->
+<section class="section" id="revenue">
+  <div class="wrap">
+    <div class="s-eyebrow reveal">Business Model</div>
+    <h2 class="s-title reveal">Clear Revenue Streams</h2>
+    <p class="s-sub reveal">Subscription-first SaaS model built for Bangladesh, with Bcash and Nagad as native payment gateways. No dependency on international payment rails.</p>
+    <div class="rev-grid">
+      <div class="rev-chart reveal">
+        <div class="rev-chart-title">Projected Monthly Revenue (BDT)</div>
+        <div class="chart-bars" id="chartBars">
+          <div class="cbar-wrap"><div class="cbar" style="height:20%;background:linear-gradient(180deg,var(--c2),var(--c3))"></div><div class="cbar-lbl">Jan</div><div class="cbar-val">৳18K</div></div>
+          <div class="cbar-wrap"><div class="cbar" style="height:30%;background:linear-gradient(180deg,var(--c2),var(--c3))"></div><div class="cbar-lbl">Feb</div><div class="cbar-val">৳27K</div></div>
+          <div class="cbar-wrap"><div class="cbar" style="height:45%;background:linear-gradient(180deg,var(--c2),var(--c3))"></div><div class="cbar-lbl">Mar</div><div class="cbar-val">৳41K</div></div>
+          <div class="cbar-wrap"><div class="cbar" style="height:55%;background:linear-gradient(180deg,var(--c2),var(--c3))"></div><div class="cbar-lbl">Apr</div><div class="cbar-val">৳50K</div></div>
+          <div class="cbar-wrap"><div class="cbar" style="height:60%;background:linear-gradient(180deg,var(--c2),var(--c3))"></div><div class="cbar-lbl">May</div><div class="cbar-val">৳54K</div></div>
+          <div class="cbar-wrap"><div class="cbar" style="height:70%;background:linear-gradient(180deg,var(--c2),var(--c3))"></div><div class="cbar-lbl">Jun</div><div class="cbar-val">৳63K</div></div>
+          <div class="cbar-wrap"><div class="cbar" style="height:75%;background:linear-gradient(180deg,var(--c),var(--c2))"></div><div class="cbar-lbl">Q3</div><div class="cbar-val">৳85K</div></div>
+          <div class="cbar-wrap"><div class="cbar" style="height:90%;background:linear-gradient(180deg,var(--gold),var(--gold2))"></div><div class="cbar-lbl">Q4</div><div class="cbar-val">৳2.4L</div></div>
+        </div>
+      </div>
+      <div class="rev-breakdown reveal">
+        <div class="rb-item">
+          <div class="rb-icon">💳</div>
+          <div><div class="rb-name">Premium Subscriptions</div><div class="rb-desc">৳500/month · Bcash & Nagad</div></div>
+          <div class="rb-amount"><div class="rb-val">65%</div><div class="rb-pct">of revenue</div></div>
+        </div>
+        <div class="rb-item">
+          <div class="rb-icon">🔑</div>
+          <div><div class="rb-name">API Access (B2B)</div><div class="rb-desc">Fantasy app developers · SaaS</div></div>
+          <div class="rb-amount"><div class="rb-val">25%</div><div class="rb-pct">of revenue</div></div>
+        </div>
+        <div class="rb-item">
+          <div class="rb-icon">🏆</div>
+          <div><div class="rb-name">Contest Entry Fees</div><div class="rb-desc">League tournaments · Roadmap Q3</div></div>
+          <div class="rb-amount"><div class="rb-val">10%</div><div class="rb-pct">roadmap</div></div>
+        </div>
+        <div class="rb-item" style="background:rgba(0,229,255,0.04);border-color:var(--c3)">
+          <div class="rb-icon">📈</div>
+          <div><div class="rb-name">Year 1 Target</div><div class="rb-desc">500 paid users @ ৳500/month</div></div>
+          <div class="rb-amount"><div class="rb-val" style="color:var(--c)">৳30L</div><div class="rb-pct" style="color:var(--c)">annual ARR</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PAYMENT FLOW -->
+<section class="section">
+  <div class="wrap">
+    <div class="s-eyebrow reveal">Payment Infrastructure</div>
+    <h2 class="s-title reveal">Built for Bangladesh</h2>
+    <p class="s-sub reveal">Bcash and Nagad are the #1 and #2 mobile financial services in Bangladesh with 50M+ combined users. We are fully integrated — no international payment friction.</p>
+    <div class="pay-flow">
+      <div class="pf-step reveal">
+        <div class="pf-circle">📲</div>
+        <div class="pf-title">Register</div>
+        <div class="pf-sub">User signs up free</div>
+      </div>
+      <div class="pf-step reveal">
+        <div class="pf-circle">💳</div>
+        <div class="pf-title">Subscribe</div>
+        <div class="pf-sub">Selects Bcash or Nagad</div>
+      </div>
+      <div class="pf-step reveal">
+        <div class="pf-circle">✅</div>
+        <div class="pf-title">Pay</div>
+        <div class="pf-sub">৳500 via MFS redirect</div>
+      </div>
+      <div class="pf-step reveal">
+        <div class="pf-circle">🔑</div>
+        <div class="pf-title">API Key</div>
+        <div class="pf-sub">Auto-issued instantly</div>
+      </div>
+      <div class="pf-step reveal">
+        <div class="pf-circle">🏏</div>
+        <div class="pf-title">Premium</div>
+        <div class="pf-sub">Full AI access unlocked</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TECH STACK -->
+<section class="section">
+  <div class="wrap">
+    <div class="s-eyebrow reveal">Technology</div>
+    <h2 class="s-title reveal">Commercial-Ready Stack</h2>
+    <p class="s-sub reveal">Every component is production-grade, open source, and deployable on Render.com free tier. Zero infrastructure cost to launch.</p>
+    <div class="tech-grid">
+      <div class="tech-item reveal"><div class="tech-icon">⚡</div><div><div class="tech-name">FastAPI</div><div class="tech-role">REST API backend — async, typed, auto-docs</div></div></div>
+      <div class="tech-item reveal"><div class="tech-icon">🗄️</div><div><div class="tech-name">SQLite + WAL</div><div class="tech-role">Zero-config DB, concurrent reads, 10GB+ capable</div></div></div>
+      <div class="tech-item reveal"><div class="tech-icon">🤖</div><div><div class="tech-name">scikit-learn</div><div class="tech-role">Random Forest prediction engine, trainable</div></div></div>
+      <div class="tech-item reveal"><div class="tech-icon">🔐</div><div><div class="tech-name">bcrypt + JWT</div><div class="tech-role">Secure password hashing, signed tokens</div></div></div>
+      <div class="tech-item reveal"><div class="tech-icon">💳</div><div><div class="tech-name">Bcash + Nagad</div><div class="tech-role">Bangladesh-native MFS payment gateways</div></div></div>
+      <div class="tech-item reveal"><div class="tech-icon">🚀</div><div><div class="tech-name">Render.com</div><div class="tech-role">Free tier cloud deploy, Singapore region</div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ROADMAP -->
+<section class="section" id="roadmap">
+  <div class="wrap">
+    <div class="s-eyebrow reveal">Roadmap</div>
+    <h2 class="s-title reveal">What's Built. What's Next.</h2>
+    <p class="s-sub reveal">The core platform is production-ready today. Investment accelerates growth features and marketing.</p>
+    <div class="roadmap">
+      <div class="rm-item reveal">
+        <div class="rm-quarter done">Q1<br>2025</div>
+        <div>
+          <div class="rm-title">Foundation — Complete ✓</div>
+          <div class="rm-items">
+            <span class="rm-tag done">BPL API (10 seasons)</span>
+            <span class="rm-tag done">Role-based auth</span>
+            <span class="rm-tag done">Bcash / Nagad skeleton</span>
+            <span class="rm-tag done">Admin dashboard</span>
+            <span class="rm-tag done">AI predictions v1</span>
+            <span class="rm-tag done">Render deploy</span>
+          </div>
+        </div>
+      </div>
+      <div class="rm-item reveal">
+        <div class="rm-quarter now">Q2<br>2025</div>
+        <div>
+          <div class="rm-title">Growth — In Progress</div>
+          <div class="rm-items">
+            <span class="rm-tag live">Live payment activation</span>
+            <span class="rm-tag live">Mobile app (PWA)</span>
+            <span class="rm-tag live">Real BPL data scraping</span>
+            <span class="rm-tag">User acquisition campaign</span>
+            <span class="rm-tag">500 paid user target</span>
+          </div>
+        </div>
+      </div>
+      <div class="rm-item reveal">
+        <div class="rm-quarter next">Q3<br>2025</div>
+        <div>
+          <div class="rm-title">Scale — Post-Investment</div>
+          <div class="rm-items">
+            <span class="rm-tag">Contest tournaments</span>
+            <span class="rm-tag">Live score integration</span>
+            <span class="rm-tag">B2B API sales</span>
+            <span class="rm-tag">ML model v2</span>
+            <span class="rm-tag">Push notifications</span>
+            <span class="rm-tag">Bangla language UI</span>
+          </div>
+        </div>
+      </div>
+      <div class="rm-item reveal">
+        <div class="rm-quarter" style="color:var(--purple)">Q4<br>2025</div>
+        <div>
+          <div class="rm-title">Regional Expansion</div>
+          <div class="rm-items">
+            <span class="rm-tag">BCL / National League</span>
+            <span class="rm-tag">Women's BPL</span>
+            <span class="rm-tag">Series A fundraise</span>
+            <span class="rm-tag">10,000 paid user target</span>
+            <span class="rm-tag">Franchise partnerships</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CTA / CONTACT -->
+<section class="cta-section" id="contact">
+  <div class="wrap">
+    <div class="cta-inner">
+      <div class="cta-label">Investment Opportunity</div>
+      <h2 class="cta-h2">JOIN THE MISSION</h2>
+      <p class="cta-p">We are raising a seed round to activate payments, acquire the first 500 users, and build the #1 fantasy cricket platform in Bangladesh. First-mover advantage. 163M fans. Zero competition.</p>
+      <div class="cta-btns">
+        <a href="/cdn-cgi/l/email-protection#1b737e7777745b79727174627d7a756f7a686235787476" class="btn-main">Request Full Deck →</a>
+        <a href="https://github.com" class="btn-outline" target="_blank">View on GitHub</a>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="cc-lbl">Email</div>
+          <div class="cc-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="422a272e2e2d02202b282d3b24232c3623313b6c212d2f">[email&#160;protected]</a></div>
+        </div>
+        <div class="contact-card">
+          <div class="cc-lbl">Platform</div>
+          <div class="cc-val">bijoyfantasy.onrender.com</div>
+        </div>
+        <div class="contact-card">
+          <div class="cc-lbl">Raising</div>
+          <div class="cc-val">৳50L Seed Round</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="divider"></div>
+<footer>
+  <div class="wrap footer-inner">
+    <div class="footer-left">BIJOY<em>FANTASY</em>BD</div>
+    <div class="footer-right">Built in Bangladesh · BPL 2012–2026 · MIT License · Numeric stats only · AI governance compliant</div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 60);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Smooth nav highlight
+const sections = document.querySelectorAll('section[id], div[id]');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--t1)' : '';
+  });
+});
+
+// Chart bar animation
+const bars = document.querySelectorAll('.cbar');
+const chartObs = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    bars.forEach((b, i) => {
+      const h = b.style.height;
+      b.style.height = '0%';
+      setTimeout(() => { b.style.transition = 'height .6s ease'; b.style.height = h; }, i * 80);
+    });
+    chartObs.disconnect();
+  }
+}, { threshold: 0.3 });
+if (document.getElementById('chartBars')) chartObs.observe(document.getElementById('chartBars'));
+
+// Player add button interaction
+document.querySelectorAll('.pl-add, .pp-add').forEach(btn => {
+  if (btn.textContent === '+') {
+    btn.addEventListener('click', function() {
+      this.textContent = '−';
+      this.style.background = '#ef4444';
+      this.style.color = '#fff';
+      const budg
