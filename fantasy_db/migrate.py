@@ -112,7 +112,7 @@ def seed_users(conn):
         ("bpl_lover", "lover@example.com", _hash("pass123"), "paid", _apikey()),
     ]
     conn.executemany(
-        "INSERT OR IGNORE INTO users(username,email,password_hash,role,api_key) VALUES(?,?,?,?,?)",
+        "INSERT OR IGNORE INTO users(username,email,password,role,api_key) VALUES(?,?,?,?,?)",
         users
     )
     conn.commit()
