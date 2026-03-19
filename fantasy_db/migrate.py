@@ -103,16 +103,16 @@ def seed_users(conn):
         return "bpl_" + "".join(random.choices(string.ascii_letters+string.digits, k=28))
 
     users = [
-        ("superadmin", "admin@bijoyfantasy.com",  "+8801700000001", _hash("admin123"),   "superadmin", _apikey()),
-        ("bpl_admin",  "ops@bijoyfantasy.com",    "+8801700000002", _hash("admin456"),   "admin",      _apikey()),
-        ("rafiqul_bd", "rafiq@example.com",        "+8801711111111", _hash("pass123"),    "paid",       _apikey()),
-        ("cricket_bd", "cricket@example.com",      "+8801722222222", _hash("pass123"),    "paid",       _apikey()),
-        ("karim2025",  "karim@example.com",         "+8801733333333", _hash("pass123"),    "free",       None),
-        ("dhaka_fan",  "dhaka@example.com",         "+8801744444444", _hash("pass123"),    "free",       None),
-        ("bpl_lover",  "lover@example.com",         "+8801755555555", _hash("pass123"),    "paid",       _apikey()),
+        ("superadmin", "admin@bijoyfantasy.com", _hash("admin123"), "superadmin", _apikey()),
+        ("bpl_admin", "ops@bijoyfantasy.com", _hash("admin456"), "admin", _apikey()),
+        ("rafiqul_bd", "rafiq@example.com", _hash("pass123"), "paid", _apikey()),
+        ("cricket_bd", "cricket@example.com", _hash("pass123"), "paid", _apikey()),
+        ("karim2025", "karim@example.com", _hash("pass123"), "free", None),
+        ("dhaka_fan", "dhaka@example.com", _hash("pass123"), "free", None),
+        ("bpl_lover", "lover@example.com", _hash("pass123"), "paid", _apikey()),
     ]
     conn.executemany(
-        "INSERT OR IGNORE INTO users(username,email,phone,password_hash,role,api_key) VALUES(?,?,?,?,?,?)",
+        "INSERT OR IGNORE INTO users(username,email,password_hash,role,api_key) VALUES(?,?,?,?,?)",
         users
     )
     conn.commit()
