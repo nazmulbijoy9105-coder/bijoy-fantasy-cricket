@@ -271,7 +271,7 @@ def run():
     seed_matches(conn)
     seed_performances(conn)
     seed_subscriptions(conn)
-    seed_ai_predictions(conn)
+    # seed_ai_predictions(conn)  # skipped — schema conflict
     seed_contests(conn)
     conn.close()
     print("\n[migrate] ✓ Complete. Database ready.")
