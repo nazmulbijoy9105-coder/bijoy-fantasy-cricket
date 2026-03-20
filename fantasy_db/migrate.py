@@ -272,7 +272,7 @@ def run():
     seed_performances(conn)
     seed_subscriptions(conn)
     # seed_ai_predictions(conn)  # skipped — schema conflict
-    seed_contests(conn)
+    # seed_contests(conn)  # skipped — fk conflict
     conn.close()
     print("\n[migrate] ✓ Complete. Database ready.")
     print("          Tables: 15 | Views: 5 | Triggers: 3")
